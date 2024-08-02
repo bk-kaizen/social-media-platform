@@ -1,5 +1,7 @@
 package io.dev.socialmediaplatform.usermanagement.user.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Represents the personal details of a user.
+ * Represents the user data with an ID and authentication token.
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,18 +18,13 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class UserProfile {
+public class RegistrationResponse {
     /**
-     * The email address of the user.
+     * The unique identifier for the user.
      */
-    private String email;
+    private UUID userId;
     /**
-     * The first name of the user.
+     * The authentication token associated with the user.
      */
-    private String firstName;
-    /**
-     * The last name of the user.
-     */
-    private String lastName;
-
+    private String token;
 }

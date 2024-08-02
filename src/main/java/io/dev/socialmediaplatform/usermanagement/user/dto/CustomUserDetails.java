@@ -3,13 +3,14 @@ package io.dev.socialmediaplatform.usermanagement.user.dto;
 import java.util.Collection;
 import java.util.List;
 
-import io.dev.socialmediaplatform.usermanagement.user.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import io.dev.socialmediaplatform.usermanagement.user.entity.User;
 
 /**
  * CustomUserDetails class implements the UserDetails interface and represents

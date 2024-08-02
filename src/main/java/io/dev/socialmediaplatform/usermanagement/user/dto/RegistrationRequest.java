@@ -1,21 +1,34 @@
-package io.dev.socialmediaplatform.usermanagement.auth.dto;
+package io.dev.socialmediaplatform.usermanagement.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.validation.constraints.NotNull;
+
 /**
- * DTO (Data Transfer Object) class representing the authentication request.
+ * DTO (Data Transfer Object) class representing the registration request.
  */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest {
+@NoArgsConstructor
+public class RegistrationRequest {
+
+    /**
+     * The first name of the user.
+     */
+    @NotNull(message ="First name must not be null")
+    @NotBlank(message = "First name must not be empty")
+    private String firstname;
+
+    /**
+     * The last name of the user.
+     */
+    private String lastname;
 
     /**
      * The email of the user.
@@ -28,8 +41,8 @@ public class AuthenticationRequest {
     /**
      * The password of the user.
      */
-
     @NotNull(message ="Password must not be null")
     @NotBlank(message = "Password must not be empty")
     private String password;
+
 }

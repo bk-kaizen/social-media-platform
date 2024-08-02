@@ -1,7 +1,5 @@
 package io.dev.socialmediaplatform.security;
 
-import io.dev.socialmediaplatform.usermanagement.config.CustomUserDetailsService;
-import io.dev.socialmediaplatform.usermanagement.config.JwtAuthenticationConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import lombok.RequiredArgsConstructor;
+
+import io.dev.socialmediaplatform.usermanagement.config.CustomUserDetailsService;
+import io.dev.socialmediaplatform.usermanagement.config.JwtAuthenticationConfig;
 
 /**
  * SecurityConfiguration class is responsible for configuring the security
@@ -33,7 +33,6 @@ public class SecurityConfiguration {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthenticationConfig jwtAuthenticationConfig;
-    private final LogoutHandler logoutHandler;
 
     /**
      * Configures the security filter chain with the specified HTTP security
@@ -47,7 +46,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
+                        auth -> auth.requestMatchers("/api/auth/**","/api/users/**").permitAll().anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationConfig, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
