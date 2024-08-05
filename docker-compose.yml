@@ -11,6 +11,19 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - social-media-platform
+
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+        - social-media-platform
 
 volumes:
   postgres_data:
+
+networks:
+  social-media-platform:

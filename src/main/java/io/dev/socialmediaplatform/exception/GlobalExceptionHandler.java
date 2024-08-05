@@ -31,8 +31,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, ex.getStatus());
     }
 
-    @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException ex) {
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<ErrorResponse> handlePostNotFoundException(PostException ex) {
         List<String> details = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatusCode(ex.getStatus().value());

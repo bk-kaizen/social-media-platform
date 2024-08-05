@@ -2,6 +2,7 @@ package io.dev.socialmediaplatform.usermanagement.user.controller;
 
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/users")
 @Slf4j
+@Tag(name = "User Management", description = "APIs for managing users")
 public class UserController {
 
     private final UserRegistrationService userRegistrationService;
