@@ -1,7 +1,13 @@
 package io.dev.socialmediaplatform.security;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,13 +19,19 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 
+import io.dev.socialmediaplatform.exception.ErrorResponse;
 import io.dev.socialmediaplatform.usermanagement.config.CustomUserDetailsService;
 import io.dev.socialmediaplatform.usermanagement.config.JwtAuthenticationConfig;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * SecurityConfiguration class is responsible for configuring the security
@@ -45,11 +57,14 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/api/auth/**","/api/users/**").permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/actuator/health", "/api/api-docs/**", "/api/swagger-ui/**",
+                                "/api/swagger/**", "/api/auth/**", "/api/users/**")
+                        .permitAll().anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationConfig, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint()));
         return http.build();
 
     }
@@ -80,5 +95,32 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            ErrorResponse errorResponse = buildErrorResponse(response, authException);
+            buildServletOutputStream(response, errorResponse);
+        };
+    }
+
+    private void buildServletOutputStream(HttpServletResponse response, ErrorResponse errorResponse)
+            throws IOException {
+        ServletOutputStream out = response.getOutputStream();
+        new ObjectMapper().writeValue(out, errorResponse);
+        out.flush();
+    }
+
+    private ErrorResponse buildErrorResponse(HttpServletResponse httpServletResponse, Exception ex) {
+        List<String> details = new ArrayList<>();
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatusCode(httpServletResponse.getStatus());
+        errorResponse.setMessage(HttpStatus.valueOf(httpServletResponse.getStatus()).name());
+        details.add(ex.getLocalizedMessage().split(":")[0]);
+        errorResponse.setDetails(details);
+        return errorResponse;
     }
 }

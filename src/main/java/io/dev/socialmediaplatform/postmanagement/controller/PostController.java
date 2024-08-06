@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import io.dev.socialmediaplatform.postmanagement.dto.PostDto;
 import io.dev.socialmediaplatform.postmanagement.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,8 +30,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -127,6 +128,7 @@ public class PostController {
                             ]
                         }
                         """))) })
+    @GetMapping()
     public Page<PostDto> retrievePosts(
             @Parameter(hidden = true, in = ParameterIn.QUERY, style = ParameterStyle.FORM)
             @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import io.dev.socialmediaplatform.exception.UserNotFoundException;
+import io.dev.socialmediaplatform.exception.UserException;
 import io.dev.socialmediaplatform.exception.ValidationExceptionUtils;
 import io.dev.socialmediaplatform.usermanagement.config.JwtService;
 import io.dev.socialmediaplatform.usermanagement.user.dto.RegistrationRequest;
@@ -42,7 +42,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         ValidationExceptionUtils.handleException(constraintViolations);
         Optional<User> optionalUser = userService.retrieveUserByEmail(registrationRequest.getEmail());
         if (optionalUser.isPresent()) {
-            throw new UserNotFoundException("user email already exists!", HttpStatus.NOT_FOUND);
+            throw new UserException("user email already exists!", HttpStatus.NOT_FOUND);
         }
 
         var savedUser = buildAndSaveUser(registrationRequest);

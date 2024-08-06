@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import io.dev.socialmediaplatform.exception.UserNotFoundException;
+import io.dev.socialmediaplatform.exception.UserException;
 import io.dev.socialmediaplatform.usermanagement.config.JwtService;
 import io.dev.socialmediaplatform.usermanagement.user.dto.RegistrationRequest;
 import io.dev.socialmediaplatform.usermanagement.user.dto.RegistrationResponse;
@@ -75,7 +75,7 @@ public class UserRegistrationServiceImplTest {
         when(fieldValidator.validate(request)).thenReturn(Set.of());
         when(userService.retrieveUserByEmail(request.getEmail())).thenReturn(Optional.of(existingUser));
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+        UserException exception = assertThrows(UserException.class, () -> {
             userRegistrationService.registerUser(request);
         });
         assertEquals("user email already exists!", exception.getMessage());

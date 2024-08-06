@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 
-import io.dev.socialmediaplatform.exception.UserNotFoundException;
+import io.dev.socialmediaplatform.exception.UserException;
 import io.dev.socialmediaplatform.usermanagement.auth.dto.AuthenticationRequest;
 import io.dev.socialmediaplatform.usermanagement.auth.dto.AuthenticationResponse;
 import io.dev.socialmediaplatform.usermanagement.auth.service.impl.AuthenticationServiceImpl;
@@ -67,9 +67,9 @@ public class AuthenticationServiceImplTest {
     @DisplayName("Given Invalid Credentials Throws Error Message")
     void authenticate_InvalidCredentials() {
         AuthenticationRequest request = new AuthenticationRequest("user@example.com", "wrongPassword");
-        when(authenticationManager.authenticate(any())).thenThrow(new UserNotFoundException("user not found!"));
+        when(authenticationManager.authenticate(any())).thenThrow(new UserException("user not found!"));
 
-        Exception exception = assertThrows(UserNotFoundException.class, () -> {
+        Exception exception = assertThrows(UserException.class, () -> {
             authenticationService.authenticate(request);
         });
         assertEquals("user not found!", exception.getMessage());

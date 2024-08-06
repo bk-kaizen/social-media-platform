@@ -18,8 +18,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserException ex) {
         List<String> details = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatusCode(ex.getStatus().value());

@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import io.dev.socialmediaplatform.exception.UserNotFoundException;
+import io.dev.socialmediaplatform.exception.UserException;
 import io.dev.socialmediaplatform.usermanagement.user.dto.UserProfile;
 import io.dev.socialmediaplatform.usermanagement.user.entity.User;
 import io.dev.socialmediaplatform.usermanagement.user.repo.UserRepository;
@@ -89,7 +89,7 @@ public class UserServiceImplTest {
         UUID userId = UUID.randomUUID();
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+        UserException exception = assertThrows(UserException.class, () -> {
             userService.retrieveUser(userId);
         });
         assertEquals("User with id " + userId + " not found", exception.getMessage());

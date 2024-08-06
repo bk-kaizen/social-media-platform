@@ -3,7 +3,7 @@ package io.dev.socialmediaplatform.usermanagement.user.service.api;
 import java.util.Optional;
 import java.util.UUID;
 
-import io.dev.socialmediaplatform.exception.UserNotFoundException;
+import io.dev.socialmediaplatform.exception.UserException;
 import io.dev.socialmediaplatform.usermanagement.user.dto.UserProfile;
 import io.dev.socialmediaplatform.usermanagement.user.entity.User;
 
@@ -31,7 +31,7 @@ public interface UserService {
      *                               is to be retrieved. It must be a valid UUID.
      * @return                       The {@link UserProfile} object containing the
      *                               user's profile information.
-     * @throws UserNotFoundException If no user with the given ID exists.
+     * @throws UserException If no user with the given ID exists.
      */
     UserProfile retrieveUser(UUID userId);
 }
